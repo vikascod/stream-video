@@ -9,12 +9,14 @@
         {% for video in videos %}
         <div class="card mb-3">
             <div class="card-body">
+                <a href="{% url 'show_video' video.id %}"> 
                 <video width="320" height="240" controls>
                     <source src="{{ video.video_file.url }}" type="video/mp4">
                 </video>
+                </a>
                 <h5 class="card-title mt-3">{{ video.title }}</h5>
                 <p class="card-text"><small class="text-muted">
-                   <a href="{% url 'show_video' video.id %}"> {{ video.created_on|timesince }} ago </a>
+                   {{ video.created_on|timesince }} ago
                 </small></p>
                 <p class="card-text">{{ video.description }}</p>
             </div>
@@ -28,8 +30,14 @@
                         {% endif %}
                     </div>
                     <div class="col-md-4">
-                        <a href="" class="btn btn-outline-info btn-sm">Share</a> 
+                         
+                        {% if user in video.user.channel.subscribe.all %}
+                        {{ video.user.channel.total_subscribers }} - Subscribers  <a href="{% url 'unsubscribe' video.user.channel.id %}" class="btn btn-outline-info btn-sm">Unsubscribe</a> 
+                        {% else %}
+                        {{ video.user.channel.total_subscribers }} - Subscribers   <a href="{% url 'subscribe' video.user.channel.id %}" class="btn btn-outline-info btn-sm">Subscribe</a> 
+                        {% endif %}
                     </div>
+                    
                 </div>
                 <div class="collapse mt-3" id="collapseComment{{ video.id }}">
                     <div class="card card-body">

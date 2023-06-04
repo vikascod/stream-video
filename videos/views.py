@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from videos.models import Video, Comment
+from videos.models import Video, Comment, Channel
 from videos.forms import SignUpForm, CommentForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -53,6 +53,23 @@ def comment_update_view(request, pk):
         return render(request, 'videos/comment_edit.html', {'form':form, 'comment':comment})
     else:
         return HttpResponse("Comment not found")
+
+
+@login_required(login_url='login')
+def subcriber_view(request, pk):
+    user_subscribe = Channel.objects.get(user_id=pk)
+    request.user.channel.subscribe.add(user_subscribe)
+    request.user.channel.save()
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required(login_url='login')
+def unsubcriber_view(request, pk):
+    user_subscribe = Channel.objects.get(id=pk)
+    request.user.channel.subscribe.remove(user_subscribe)
+    request.user.channel.save()
+    return redirect(request.META.get('HTTP_REFERER'))
+
 
 
 @login_required(login_url='login')
