@@ -13,19 +13,22 @@
                     <source src="{{ video.video_file.url }}" type="video/mp4">
                 </video>
                 <h5 class="card-title mt-3">{{ video.title }}</h5>
-                <p class="card-text"><small class="text-muted">{{ video.created_on|timesince }} ago</small></p>
+                <p class="card-text"><small class="text-muted">
+                   <a href="{% url 'show_video' video.id %}"> {{ video.created_on|timesince }} ago </a>
+                </small></p>
                 <p class="card-text">{{ video.description }}</p>
             </div>
             <div class="card-footer">
                 <div class="row">
                     <div class="col-md-4">
-                            <a href="" class="btn btn-outline-primary btn-sm">Like</a> 
+                        {% if user in video.likes.all %}
+                        {{ video.total_likes }} -Likes <a href="{% url 'like_video' video.id %}" class="btn btn-outline-warning btn-sm">Unlike</a> 
+                        {% else %}
+                        {{ video.total_likes }} - Likes <a href="{% url 'like_video' video.id %}" class="btn btn-outline-primary btn-sm">Like</a> 
+                        {% endif %}
                     </div>
                     <div class="col-md-4">
                         <a href="" class="btn btn-outline-info btn-sm">Share</a> 
-                    </div>
-                    <div class="col-md-4">
-                        <a href="" class="btn btn-outline-secondary btn-sm">Comment</a> 
                     </div>
                 </div>
                 <div class="collapse mt-3" id="collapseComment{{ video.id }}">

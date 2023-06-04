@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from videos.models import Comment
 
 
 class SignUpForm(UserCreationForm):
@@ -13,3 +14,9 @@ class SignUpForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
 
+class CommentForm(forms.ModelForm):
+    body = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control'}))
+    class Meta:
+        model = Comment
+        fields = ['body']
+        exclude = ('user', 'video')
