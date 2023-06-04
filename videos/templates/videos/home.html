@@ -1,20 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-<body>
+{% extends 'videos/base.html' %}
+
+{% block title %}
+    Home
+{% endblock title %}
+
+{% block content %}
     <div class="container">
-        <h1>Home</h1>
-        <button>
-            <a href="{% url 'upload_video' %}">Upload</a> <br>
-        </button>
-        <button>
-            <a href="{% url 'play_video' %}">Play</a>
-        </button>
+        {% for video in videos %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <video width="320" height="240" controls>
+                    <source src="{{ video.video_file.url }}" type="video/mp4">
+                </video>
+                <h5 class="card-title mt-3">{{ video.title }}</h5>
+                <p class="card-text"><small class="text-muted">{{ video.created_on|timesince }} ago</small></p>
+                <p class="card-text">{{ video.description }}</p>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-md-4">
+                            <a href="" class="btn btn-outline-primary btn-sm">Like</a> 
+                    </div>
+                    <div class="col-md-4">
+                        <a href="" class="btn btn-outline-info btn-sm">Share</a> 
+                    </div>
+                    <div class="col-md-4">
+                        <a href="" class="btn btn-outline-secondary btn-sm">Comment</a> 
+                    </div>
+                </div>
+                <div class="collapse mt-3" id="collapseComment{{ video.id }}">
+                    <div class="card card-body">
+                        <form>
+                            <div class="form-group">
+                                <textarea class="form-control" rows="3" placeholder="Add a comment"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-</body>
-</html>
+{% endblock content %}
