@@ -11,6 +11,7 @@ urlpatterns = [
     path('edit-comment/<int:pk>', views.comment_update_view, name='edit_comment'),
     path('subcribe/<int:pk>', views.subcriber_view, name='subscribe'),
     path('unsubcribe/<int:pk>', views.unsubcriber_view, name='unsubscribe'),
+    path('tranding', views.trending_videos, name='tranding'),
     path('signup', views.signup_view, name='signup'),
     path('signin', views.login_view, name='login'),
     path('logout', views.logout_view, name='logout'),

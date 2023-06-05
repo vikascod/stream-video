@@ -1,0 +1,32 @@
+{% extends 'videos/base.html' %}
+
+{% block title %}
+    Trending
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mt-4 mb-5">Trending Videos</h1>
+    <div class="row">
+        {% for video in videos %}
+        <div class="col-md-8">
+            <video width="1130" height="400" controls>
+                <source src="{{ video.video_file.url }}" type="video/mp4">
+            </video>
+            <h5 class="card-title mt-3">{{ video.title }}</h5>
+            <p>Tranding #{{ forloop.counter }}</p>
+            <p>Views: {{ video.views }}</p>
+                {% if user in video.likes.all %}
+                    {{ video.total_likes }} -Likes <a href="{% url 'like_video' video.id %}" class="btn btn-outline-warning btn-sm">Unlike</a> 
+                    {% else %}
+                    {{ video.total_likes }} - Likes <a href="{% url 'like_video' video.id %}" class="btn btn-outline-primary btn-sm">Like</a> 
+                {% endif %}
+            <p class="card-text"><small class="text-muted">
+               {{ video.created_on|timesince }} ago
+            </small></p>
+            <p class="card-text">{{ video.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

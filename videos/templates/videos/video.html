@@ -12,6 +12,7 @@
                     <source src="{{ video.video_file.url }}" type="video/mp4">
                 </video>
                 <h5 class="card-title mt-3">{{ video.title }}</h5>
+                <p>Views: {{ video.views }}</p>
                     {% if user in video.likes.all %}
                         {{ video.total_likes }} -Likes <a href="{% url 'like_video' video.id %}" class="btn btn-outline-warning btn-sm">Unlike</a> 
                         {% else %}

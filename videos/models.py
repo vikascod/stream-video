@@ -28,12 +28,18 @@ class Video(models.Model):
     video_file = models.FileField(upload_to='videos')
     likes = models.ManyToManyField(User, related_name='video_like', blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
+    views = models.IntegerField(default=0)
+
+    @classmethod
+    def get_tranding_videos(cls):
+        return cls.objects.order_by('-views')[:10]
 
     def total_likes(self):
         return self.likes.count()
 
     def __str__(self):
         return self.title
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

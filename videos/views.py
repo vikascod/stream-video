@@ -13,8 +13,11 @@ def home(request):
     return render(request, 'videos/home.html', {'videos':videos})
 
 
+@login_required(login_url='login')
 def show_video(request, pk):
     video = get_object_or_404(Video, id=pk)
+    video.views += 1
+    video.save()
     user = User.objects.get(id=request.user.id)
     if video:
         form = CommentForm(request.POST or None)
@@ -29,6 +32,11 @@ def show_video(request, pk):
         return render(request, 'videos/video.html', {'video':video, 'form':form, 'comments':comments})
     else:
         return HttpResponse("Video does not exists!")
+
+
+def trending_videos(request):
+    videos = Video.get_tranding_videos()
+    return render(request, 'videos/tranding_videos.html', {'videos':videos})
 
 
 @login_required(login_url='login')
