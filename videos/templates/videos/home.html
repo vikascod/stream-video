@@ -23,21 +23,20 @@
             <div class="card-footer">
                 <div class="row">
                     <div class="col-md-4">
-                        {% if user in video.likes.all %}
+                        {% if request.user in video.likes.all %}
                         {{ video.total_likes }} -Likes <a href="{% url 'like_video' video.id %}" class="btn btn-outline-warning btn-sm">Unlike</a> 
                         {% else %}
                         {{ video.total_likes }} - Likes <a href="{% url 'like_video' video.id %}" class="btn btn-outline-primary btn-sm">Like</a> 
                         {% endif %}
                     </div>
                     <div class="col-md-4">
-                         
-                        {% if user in video.user.channel.subscribe.all %}
-                        {{ video.user.channel.total_subscribers }} - Subscribers  <a href="{% url 'unsubscribe' video.user.channel.id %}" class="btn btn-outline-info btn-sm">Unsubscribe</a> 
+                        {{ video.user.channel.total_subscribers }} - Subscribers  
+                        {% if request.user in video.user.channel.subscribe.all %}
+                            <a href="{% url 'unsubscribe' video.user.channel.id %}" class="btn btn-warning btn-sm">Unsubscribe</a> 
                         {% else %}
-                        {{ video.user.channel.total_subscribers }} - Subscribers   <a href="{% url 'subscribe' video.user.channel.id %}" class="btn btn-outline-info btn-sm">Subscribe</a> 
+                            <a href="{% url 'subscribe' video.user.channel.id %}" class="btn btn-info btn-sm">Subscribe</a> 
                         {% endif %}
-                    </div>
-                    
+                    </div>                    
                 </div>
                 <div class="collapse mt-3" id="collapseComment{{ video.id }}">
                     <div class="card card-body">

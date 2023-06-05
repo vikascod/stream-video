@@ -1,0 +1,22 @@
+{% extends 'videos/base.html' %}
+
+{% block title %}
+    Trending
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mt-4 mb-5">Video History</h1>
+    <div class="row">
+        {% for his in videos %}
+        <div class="col-md-8">
+            <video width="1130" height="400" controls>
+                <source src="{{ his.video.video_file.url }}" type="video/mp4">
+            </video>
+            <h5 class="card-title mt-3">{{ his.video.title }}</h5>
+            <p>Watched on: {{ his.watched_on }}</p>
+            <p>Views: {{ his.video.views }}</p> <hr>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

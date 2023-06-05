@@ -49,3 +49,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class VideoHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    watched_on = models.DateTimeField(auto_now_add=True)

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from videos.models import Video, Comment, Channel
+from videos.models import Video, Comment, Channel, VideoHistory
 from videos.forms import SignUpForm, CommentForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -16,8 +16,16 @@ def home(request):
 @login_required(login_url='login')
 def show_video(request, pk):
     video = get_object_or_404(Video, id=pk)
+    if not video:
+        return HttpResponse("Video does not exists!")
     video.views += 1
     video.save()
+
+    video_history = VideoHistory.objects.filter(user=request.user).order_by('-watched_on')
+    recent_video = video_history.first()
+    if recent_video is None or recent_video.video.id != video.id:
+        VideoHistory.objects.create(user=request.user, video=video)
+
     user = User.objects.get(id=request.user.id)
     if video:
         form = CommentForm(request.POST or None)
@@ -34,9 +42,17 @@ def show_video(request, pk):
         return HttpResponse("Video does not exists!")
 
 
+
+@login_required(login_url='login')
 def trending_videos(request):
     videos = Video.get_tranding_videos()
     return render(request, 'videos/tranding_videos.html', {'videos':videos})
+
+
+@login_required(login_url='login')
+def video_history(request):
+    videos = VideoHistory.objects.filter(user=request.user).order_by('-watched_on')
+    return render(request, 'videos/video_history.html', {'videos':videos})
 
 
 @login_required(login_url='login')
