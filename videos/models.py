@@ -5,11 +5,11 @@ from django.contrib.auth.models import User
 
 class Channel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    video = models.ForeignKey("Video", on_delete=models.CASCADE, null=True, blank=True)
-    channel_name = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='images')
+    video = models.ForeignKey("Video", on_delete=models.CASCADE, related_name='channel_videos', null=True, blank=True)
+    channel_name = models.CharField(max_length=200, default="")
+    image = models.ImageField(upload_to='images', default="https://th.bing.com/th/id/OIP.iSu2RcCcdm78xbxNDJMJSgHaEo?pid=ImgDet&rs=1")
     bio = models.TextField(blank=True, null=True)
-    social_link = models.CharField(max_length=300)
+    social_link = models.CharField(max_length=300, null=True, blank=True)
     updated_on = models.DateTimeField(User, auto_now=True)
     subscribers = models.ManyToManyField(User, through='Subscription', related_name='subscribed_channels')
 
@@ -40,6 +40,7 @@ class Video(models.Model):
     likes = models.ManyToManyField(User, related_name='video_like', blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     views = models.IntegerField(default=0)
+    channel = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name='channel_videos')
 
     @classmethod
     def get_tranding_videos(cls):

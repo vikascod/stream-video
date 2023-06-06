@@ -157,10 +157,19 @@ def upload_video_view(request):
         title = request.POST.get('title')
         description = request.POST.get('description')
         video_file = request.FILES.get('video_file')
-        Video.objects.create(title=title, description=description, video_file=video_file, user=request.user)
+        
+        channel = request.user.channel
+        if not channel:
+            # Create a default channel for the user if it doesn't exist
+            channel = Channel.objects.create(user=request.user, channel_name=f"{request.user.username}'s Channel")
+        
+        video = Video.objects.create(title=title, description=description, video_file=video_file, user=request.user, channel=channel)
+        
         messages.success(request, "Video Uploaded!")
         return redirect('home')
+    
     return render(request, 'videos/upload_video.html')
+
 
 
 def signup_view(request):
