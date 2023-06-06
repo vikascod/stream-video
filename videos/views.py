@@ -16,6 +16,13 @@ def home(request):
 
 @login_required(login_url='login')
 def create_channel(request):
+    user_channel = Channel.objects.filter(user=request.user).exists()
+
+    if user_channel:
+        messages.warning(request, "You already have a channel!")
+        return redirect('home')
+
+
     if request.method == "POST":
         form = ChannelForm(request.POST, request.FILES)
         if form.is_valid():

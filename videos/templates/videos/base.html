@@ -36,7 +36,9 @@
                 {{request.user.username}}
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                {% if not request.user.channel.exists %}
                 <li><a class="dropdown-item" href="{% url 'create_channel' %}">Create Channel</a></li>
+                {% endif %}            
                 <li><a class="dropdown-item" href="{% url 'upload_video' %}">Upload Video</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li class="dropdown-item">
