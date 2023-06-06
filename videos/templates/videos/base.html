@@ -25,14 +25,24 @@
               <a class="nav-link" href="#">Subscriptions</a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="#">Library</a>
+              <a class="nav-link" href="{% url 'library' %}">Library</a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="{% url 'history' %}">History</a>
             </li>
             {% if request.user.is_authenticated %}
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{request.user.username}}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url 'create_channel' %}">Create Channel</a></li>
+                <li><a class="dropdown-item" href="{% url 'upload_video' %}">Upload Video</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li class="dropdown-item">
+                  <a href="{% url 'logout' %}">Sign Out</a>
+                </li>
+              </ul>
             </li>
             {% else %}
             <li class="nav-item active">
@@ -45,6 +55,14 @@
           </ul>
         </div>
       </nav>
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <strong>Message : </strong> {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endif %}
 
       {% block content %}
         

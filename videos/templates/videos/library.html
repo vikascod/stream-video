@@ -1,0 +1,27 @@
+{% extends 'videos/base.html' %}
+
+{% block title %}
+    Library
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mt-4 mb-5">Video Library</h1>
+    <div class="row">
+        {% for library in videos %}
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <video width="100%" height="auto" controls>
+                        <source src="{{ library.video.video_file.url }}" type="video/mp4">
+                    </video>
+                    <h5 class="card-title mt-3">{{ library.video.title }}</h5>
+                    <p class="card-text">Watched on: {{ library.watched_on }}</p>
+                    <p class="card-text">Views: {{ library.video.views }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Channel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    video = models.ForeignKey("Video", on_delete=models.CASCADE)
+    video = models.ForeignKey("Video", on_delete=models.CASCADE, null=True, blank=True)
     subscribe = models.ManyToManyField('self', related_name='subcripbe_by', symmetrical=False, blank=True)
     channel_name = models.CharField(max_length=200)
     image = models.ImageField(upload_to='images')
@@ -55,3 +55,12 @@ class VideoHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     watched_on = models.DateTimeField(auto_now_add=True)
+
+
+class SaveVideo(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    saved_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.video.title

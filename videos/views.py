@@ -1,16 +1,31 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from videos.models import Video, Comment, Channel, VideoHistory
-from videos.forms import SignUpForm, CommentForm
+from videos.models import Video, Comment, Channel, VideoHistory, SaveVideo
+from videos.forms import SignUpForm, CommentForm, ChannelForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.contrib import messages
 
 
 @login_required(login_url='login')
 def home(request):
     videos = Video.objects.all()
     return render(request, 'videos/home.html', {'videos':videos})
+
+
+@login_required(login_url='login')
+def create_channel(request):
+    if request.method == "POST":
+        form = ChannelForm(request.POST, request.FILES)
+        if form.is_valid():
+            channel = form.save(commit=False)
+            channel.user = request.user
+            channel.save()
+            messages.success(request, "Channel Created!")
+            return redirect('home')
+    form = ChannelForm()
+    return render(request, 'videos/channel.html', {'form':form})
 
 
 @login_required(login_url='login')
@@ -41,6 +56,29 @@ def show_video(request, pk):
     else:
         return HttpResponse("Video does not exists!")
 
+
+@login_required(login_url='login')
+def save_video_view(request, pk):
+    video = get_object_or_404(Video, id=pk)
+    if not video:
+        return HttpResponse("Video does not exist!")
+
+    save_video, created = SaveVideo.objects.get_or_create(user=request.user, video=video)
+
+    if created:
+        messages.success(request, "Video Saved!")
+        save_video.save()
+    else:
+        messages.warning(request, "Video Unsaved!")
+        save_video.delete()
+
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required(login_url='login')
+def library(request):
+    videos = SaveVideo.objects.filter(user=request.user).order_by('-saved_on')
+    return render(request, 'videos/library.html', {'videos':videos})
 
 
 @login_required(login_url='login')
@@ -82,18 +120,17 @@ def comment_update_view(request, pk):
 @login_required(login_url='login')
 def subcriber_view(request, pk):
     user_subscribe = Channel.objects.get(user_id=pk)
-    request.user.channel.subscribe.add(user_subscribe)
-    request.user.channel.save()
+    user_channel = request.user.channel
+
+    if user_subscribe in user_channel.subscribe.all():
+        user_channel.subscribe.remove(user_subscribe)
+        messages.warning(request, "Unsubscribed!")
+    else:
+        user_channel.subscribe.add(user_subscribe)
+        messages.warning(request, "Subscribed!")
+    
+    user_channel.save()
     return redirect(request.META.get('HTTP_REFERER'))
-
-
-@login_required(login_url='login')
-def unsubcriber_view(request, pk):
-    user_subscribe = Channel.objects.get(id=pk)
-    request.user.channel.subscribe.remove(user_subscribe)
-    request.user.channel.save()
-    return redirect(request.META.get('HTTP_REFERER'))
-
 
 
 @login_required(login_url='login')
@@ -108,13 +145,14 @@ def video_like_view(request, pk):
 
 
 @login_required(login_url='login')
-def upload_video(request):
+def upload_video_view(request):
     if request.method == "POST":
         title = request.POST.get('title')
         description = request.POST.get('description')
         video_file = request.FILES.get('video_file')
-        Video.objects.create(title=title, description=description, video_file=video_file)
-        return redirect(request.META.get('HTTP_REFERER'))
+        Video.objects.create(title=title, description=description, video_file=video_file, user=request.user)
+        messages.success(request, "Video Uploaded!")
+        return redirect('home')
     return render(request, 'videos/upload_video.html')
 
 

@@ -1,0 +1,15 @@
+{% extends 'videos/base.html' %}
+
+{% block title %}
+    Create Channel
+{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class="btn btn-sm btn-primary" value="Create">
+        </form>
+    </div>
+{% endblock content %}
