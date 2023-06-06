@@ -126,17 +126,17 @@ def comment_update_view(request, pk):
 
 @login_required(login_url='login')
 def subcriber_view(request, pk):
-    user_subscribe = Channel.objects.get(user_id=pk)
-    user_channel = request.user.channel
+    channel = get_object_or_404(Channel, pk=pk)
+    subscriber = request.user
 
-    if user_subscribe in user_channel.subscribe.all():
-        user_channel.subscribe.remove(user_subscribe)
+    if channel.subscribers.filter(id=subscriber.id).exists():
+        channel.subscribers.remove(subscriber)
         messages.warning(request, "Unsubscribed!")
     else:
-        user_channel.subscribe.add(user_subscribe)
-        messages.warning(request, "Subscribed!")
+        channel.subscribers.add(subscriber)
+        messages.success(request, "Subscribed!")
     
-    user_channel.save()
+    channel.save()
     return redirect(request.META.get('HTTP_REFERER'))
 
 

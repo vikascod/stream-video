@@ -30,18 +30,18 @@
                         {% endif %}
                     </div>
                     <div class="col-md-4">
-                        {{ video.user.channel.total_subscribers }} - Subscribers  
-                        {% if request.user in video.user.channel.subscribe.all %}
+                        {{ video.user.channel.total_subscribers }} - {{ video.user.channel.channel_name }}  
+                        {% if user in video.user.channel.subscribed_by.all %}
                             <a href="{% url 'subscribe' video.user.channel.id %}" class="btn btn-warning btn-sm">Unsubscribe</a> 
                         {% else %}
                             <a href="{% url 'subscribe' video.user.channel.id %}" class="btn btn-info btn-sm">Subscribe</a> 
                         {% endif %}
-                    </div>                  
+                    </div>                
                     <div class="col-md-4">
                         {% if video in video.user.savevideo.all %}
                             <a href="{% url 'save_video' video.id %}" class="btn btn-primary btn-sm">Unsave</a> 
                         {% else %}
-                            <a href="{% url 'save_video' video.id %}" class="btn btn-primary btn-sm">Save</a> 
+                            <a href="{% url 'save_video' video.id %}" class="btn btn-primary btn-sm">Watch Later</a> 
                         {% endif %}
                     </div>                                       
                 <div class="collapse mt-3" id="collapseComment{{ video.id }}">
