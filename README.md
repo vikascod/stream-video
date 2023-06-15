@@ -1,6 +1,6 @@
 # stream-video
 
-Your Web App Name is a web application that allows users to upload and play videos. It provides a convenient platform for users to store and share their video content.
+stream-videoe is a web application that allows users to upload and play videos. It provides a convenient platform for users to store and share their video content.
 
 ## Features
 
