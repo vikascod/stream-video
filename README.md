@@ -17,7 +17,7 @@ stream-videoe is a web application that allows users to upload and play videos. 
 1. Clone the repository:
 
    ```shell
-   git clone https://github.com/your-username/your-repo.git
+   git clone https://github.com/vikascod/stream-video.git
 
 
 2. Navigate to the project directory:
